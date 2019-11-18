@@ -15,15 +15,17 @@ class ProjectsTest extends TestCase
     /** @test */
     public function a_user_can_create_a_project()
     {
-        $this->signIn();
+        $user = $this->signIn();
         $this->get('/projects/create')->assertStatus(200);
 
-        $attributes = factory(Project::class)->raw();
+        $project = factory(Project::class)->make(['owner_id' => $user->id ]);
+        
 
-        $this->followingRedirects()->post('/projects', $attributes)
-             ->assertSee($attributes['title'])
-             ->assertSee($attributes['description'])
-             ->assertSee($attributes['notes']);
+        $this->post('/projects', $project->toArray());
+
+        $this->assertDatabaseHas('projects', $project->toArray());
+        $this->get($project->path())
+             ->assertSee($project->title);
     }
 
     /** @test */
@@ -47,7 +49,6 @@ class ProjectsTest extends TestCase
         $project->invite($user);
 
         $this->delete($project->path())->assertForbidden();
-
     }
 
     /** @test */
@@ -90,8 +91,7 @@ class ProjectsTest extends TestCase
     public function guests_cannot_manage_projects()
     {
         $project = factory('App\Project')->create();
-
-        $this->get('/projects')->assertRedirect('login');
+        $this->get('/projects')->assertRedirect('/login');
         $this->get('/projects/create')->assertRedirect('login');
         $this->delete($project->path())->assertRedirect('/login');
         $this->get('/projects/{project}/edit')->assertRedirect('login');
