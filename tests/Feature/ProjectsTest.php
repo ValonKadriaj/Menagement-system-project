@@ -18,11 +18,9 @@ class ProjectsTest extends TestCase
         $user = $this->signIn();
         $this->get('/projects/create')->assertStatus(200);
 
-        $project = factory(Project::class)->make(['owner_id' => $user->id ]);
-        
+        $project = factory(Project::class)->make(['owner_id' => $user->id]);
 
         $this->post('/projects', $project->toArray());
-
         $this->assertDatabaseHas('projects', $project->toArray());
         $this->get($project->path())
              ->assertSee($project->title);

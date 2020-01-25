@@ -13,7 +13,7 @@ class InvitationsTest extends TestCase
 
     /** @test */
     public function a_project_owner_can_invite_a_user()
-    {   
+    {
         $project = ProjectFactory::ownedBy($this->signIn())->create();
 
         $userToInvite = factory(User::class)->create();
@@ -27,7 +27,7 @@ class InvitationsTest extends TestCase
 
     /** @test */
     public function the_email_address_must_be_associated_with_valid_birboard_account()
-    {   
+    {
         $project = ProjectFactory::ownedBy($this->signIn())->create();
 
         $this->post($project->path() . '/invitations', [
@@ -39,18 +39,17 @@ class InvitationsTest extends TestCase
 
     /** @test */
     public function non_owners_may_not_invite_user()
-    {   
+    {
         $project = ProjectFactory::create();
 
         $user = factory(User::class)->create();
 
         $this->signIn($user);
-        $this->post($project->path().'/invitations')->assertForbidden();
+        $this->post($project->path() . '/invitations')->assertForbidden();
 
         $project->invite($user);
 
-        $this->post($project->path().'/invitations')->assertForbidden();
-
+        $this->post($project->path() . '/invitations')->assertForbidden();
     }
 
     /** @test */

@@ -10,7 +10,7 @@
 
     <div class="flex  w-full flex-wrap  -mx-3">
         @forelse($projects as $project)
-            <div class="lg:w-1/3 w-full  px-3 pb-6 ">
+            <div class="lg:w-1/3 w-full mx-auto  px-3 pb-6 ">
                 <a href="{{  $project->path() }}">
                     @include('projects.card')
                 </a>

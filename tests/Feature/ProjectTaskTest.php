@@ -16,10 +16,11 @@ class ProjectTaskTest extends TestCase
     {
 
         $project = ProjectFactory::ownedBy($this->signIn())
-        ->withTasks(1)
         ->create();
 
-        $this->post($project->path() . '/tasks', ['body' => 'Project Task']);
+        $this->post($project->path() . '/tasks', $task = ['body' => 'Project Task']);
+        $this->assertDatabaseHas('tasks', $task);
+
         $this->get($project->path())
              ->assertSee('Project Task');
     }
